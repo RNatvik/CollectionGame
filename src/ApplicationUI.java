@@ -85,12 +85,12 @@ public class ApplicationUI {
 
         this.printInitialInformation();
         boolean quit = false;
-        Scanner scanner = new Scanner(System.in);
+
 
         while (!quit) {
-
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Please enter a direction to move (west, east, north, south)");
-            String input = scanner.next().toLowerCase();
+            String input = scanner.nextLine().toLowerCase();
 
             if (currentRoomHasDoor(input)) {
                 this.player.move(input);

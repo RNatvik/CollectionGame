@@ -2,13 +2,16 @@ import java.util.ArrayList;
 
 public class Maze {
 
-    private ArrayList<ArrayList<Room>> rooms;
+    private ArrayList<ArrayList<Room>> rooms; //Two dimensional ArrayList for rooms
     private int startX;
     private int startY;
     private int goalX;
     private int goalY;
-    private int totalItems;
+    private int itemsRemaining;
 
+    /**
+     * Constructor with default values
+     */
     public Maze() {
         this.startX = 0;
         this.startY = 0;
@@ -17,38 +20,78 @@ public class Maze {
         this.rooms = new ArrayList<>();
     }
 
+    /**
+     * Gets the room located at ArrayList[y] in ArrayList[x]
+     * @param x the index in outer ArrayList
+     * @param y the index in inner ArrayList
+     * @return the room located at x/y
+     */
     public Room getRoomAt(int x, int y) {
         Room room = new Room();
         room = this.rooms.get(x).get(y);
         return room;
     }
 
-    public int getTotalItems() {
-        return totalItems;
+    /**
+     * Gets amount of items remaining in the maze
+     * @return amount of items
+     */
+    public int getItemsRemaining() {
+        return this.itemsRemaining;
     }
 
+    /**
+     * Decreases itemsRemaining by 1
+     */
+    public void decreaseItemsRemaining() {
+        this.itemsRemaining--;
+    }
+
+    /**
+     * Gets the start position for x
+     * @return start position for x
+     */
     public int getStartX() {
         return startX;
     }
 
+    /**
+     * Gets the start position for y
+     * @return start position for y
+     */
     public int getStartY() {
         return startY;
     }
 
+    /**
+     * Gets the goal position for x
+     * @return goal position for x
+     */
     public int getGoalX() {
         return goalX;
     }
 
+    /**
+     * Gets the goal position for y
+     * @return goal position for y
+     */
     public int getGoalY() {
         return goalY;
     }
 
+    /**
+     * Method collection for creation of different mazes
+     * @param level the maze to create
+     */
     public void createMaze(int level) {
         if (level == 1) {
             this.createLevelOne();
         }
     }
 
+    /**
+     * Layout for Level 1
+     */
     private void createLevelOne() {
         for (int i = 0; i < 5; i++) {
             this.rooms.add(new ArrayList<>());
@@ -98,7 +141,7 @@ public class Maze {
         this.startY = 1;
         this.goalX = 3;
         this.goalY = 3;
-        this.totalItems = 5;
+        this.itemsRemaining = 5;
 
     }
 

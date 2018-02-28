@@ -21,12 +21,18 @@ public class ApplicationUI {
             "1. 'level 1'"
     };
 
-
+    /**
+     * Constructor
+     */
     public ApplicationUI() {
         this.maze = new Maze();
         this.player = new Player();
     }
 
+    /**
+     * startUp for ApplicationUI. Only public accessible method for this UI
+     * Rest of program will be run through console inside ApplicationUI
+     */
     public void startUp() {
         Scanner scanner = new Scanner(System.in);
 
@@ -72,36 +78,19 @@ public class ApplicationUI {
         this.runGame();
     }
 
-    private void test() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter a direction to move (west, east, north, south)");
-        String input = scanner.nextLine().toLowerCase();
-        if (currentRoomHasDoor(input)) {
-            this.player.move(input);
-            this.setPlayerCurrentRoom();
-            System.out.println("Great success! You can go this way");
-        } else if (input.equals("west") || input.equals("east") || input.equals("north") || input.equals("south") ) {
-            this.player.setPosition(this.maze.getStartX(), this.maze.getStartY());
-            this.setPlayerCurrentRoom();
-            System.out.println("Uh-oh... You bumped into a wall... ");
-        } else if (input.equals(".exit")){
-            //quit = true;
-            System.out.println("You give up i see. Too bad. Have fun with an F on your next assignment");
-        } else {
-            System.out.println(input + " is not a valid input, use (west, east, north, south)");
-        }
-    }
-
+    /**
+     * The main loop for running the game. Asks for input and gives feedback
+     */
     private void runGame() {
 
         this.printInitialInformation();
         boolean quit = false;
+        Scanner scanner = new Scanner(System.in);
 
         while (!quit) {
 
-            Scanner scanner = new Scanner(System.in);
             System.out.println("Please enter a direction to move (west, east, north, south)");
-            String input = scanner.nextLine().toLowerCase();
+            String input = scanner.next().toLowerCase();
 
             if (currentRoomHasDoor(input)) {
                 this.player.move(input);
@@ -121,29 +110,40 @@ public class ApplicationUI {
             System.out.println("Current location: (" + this.player.getCurrentX() + " / " + this.player.getCurrentY() + ")");
             Room currentRoom = this.player.getCurrentRoom();
             if (currentRoom.hasItem()) {
-                this.player.incrementItemCounter();
+                this.maze.decreaseItemsRemaining();
                 currentRoom.setItem(false);
-                System.out.println("YOU FOUND AN ITEM! You now have " + this.player.getItemCounter() + " of " + this.maze.getTotalItems() + " items!");
+                System.out.println("YOU FOUND AN ITEM! You now only have " + this.maze.getItemsRemaining() + " left to find!");
             }
-            int playerItems = this.player.getItemCounter();
-            if (playerItems == this.maze.getTotalItems() && this.player.getCurrentX() == this.maze.getGoalX() && this.player.getCurrentY() == this.maze.getGoalY()) {
+            if (this.maze.getItemsRemaining() == 0 && this.player.getCurrentX() == this.maze.getGoalX() && this.player.getCurrentY() == this.maze.getGoalY()) {
                 System.out.println("You found all items, AND managed to get out. Get a life nerd! xDDDD lolololo");
                 quit = true;
             } else if (this.player.getCurrentX() == this.maze.getGoalX() && this.player.getCurrentY() == this.maze.getGoalY()) {
                 System.out.println("You can't leave yet! Your teacher would be furious if you return without all his items!");
             }
+            System.out.println();
         }
 
     }
 
+    /**
+     * Support method for checking for valid direction
+     * @param direction the wanted direction to move
+     * @return true: if player's current room has door @param direction. Else, return false.
+     */
     private boolean currentRoomHasDoor(String direction) {
         return this.player.getCurrentRoom().getDoor(direction);
     }
 
+    /**
+     * Support method for setting player's current room
+     */
     private void setPlayerCurrentRoom() {
         this.player.setCurrentRoom(this.maze.getRoomAt(this.player.getCurrentX(), this.player.getCurrentY()));
     }
 
+    /**
+     * Prints useful information to user at start of the game
+     */
     private void printInitialInformation() {
         System.out.println("Your start location (x / y) is: (" + this.maze.getStartX() + " / " + this.maze.getStartY() + ")");
         System.out.println("You will return here if you bump into a wall, due to quantum physics and magic.");
@@ -154,6 +154,10 @@ public class ApplicationUI {
                 "simply write .exit when prompted for direction");
     }
 
+    /**
+     * prints all parts of a String[] on separate lines to user.
+     * @param menu the String[]
+     */
     private void printMenu(String[] menu) {
         for (String part : menu) {
             System.out.println(part);
